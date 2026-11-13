@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100d19">
+<title>GTA LIFE HUB | Community</title>
+<meta name="description" content="Le hub indépendant des joueurs GTA 6 : défis, garage, communauté et mystères.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#100d19;--panel:#1c1729;--pink:#ff5599;--purple:#9865ed;--muted:#aaa1bb}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+header{padding:17px 20px;background:#181322;border-bottom:1px solid #342a40;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.logo{font-weight:900;font-size:21px;letter-spacing:1px}
+.logo span{color:var(--pink)}
+main{max-width:1050px;margin:auto;padding:20px}
+.hero{min-height:320px;padding:35px 25px;border-radius:18px;background:linear-gradient(90deg,#170f27cc,#31162ccc),url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1400&q=85') center/cover;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(36px,8vw,65px);margin:0;line-height:1.05}
+.hero h1 span{color:var(--pink)}
+.hero p{color:#e2d7ec;max-width:450px;line-height:1.6}
+button{cursor:pointer;border:0;border-radius:9px;padding:12px 16px;background:var(--pink);color:white;font-weight:bold}
+button:active{transform:scale(.98)}
+nav{display:flex;gap:8px;overflow:auto;padding:15px 0}
+nav button{background:#211b2e;white-space:nowrap}
+nav button.active{background:var(--pink)}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.card{background:var(--panel);border:1px solid #342a43;padding:18px;border-radius:14px;margin:12px 0}
+.stat{font-size:29px;color:var(--pink);font-weight:900}
+small,.muted{color:var(--muted)}
+input,textarea{width:100%;padding:13px;border-radius:9px;background:#100d19;border:1px solid #42344f;color:white;margin:8px 0}
+textarea{min-height:95px}
+.item{padding:12px;border-bottom:1px solid #40334a;display:flex;justify-content:space-between;gap:10px;align-items:center}
+footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
+h2{font-size:25px}
+h3{margin-top:0}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}.hero{min-height:280px;padding:22px}main{padding:13px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">GTA LIFE <span>HUB</span></div>
+<small>COMMUNITY 01</small>
+</header>
+<main>
+<section class="hero">
+<h1>YOUR WORLD.<br><span>YOUR RULES.</span></h1>
+<p>Ton univers GTA. Tes défis. Tes découvertes. Ta communauté.</p>
+<button onclick="go('community')">DÉCOUVRIR LE HUB →</button>
+</section>
+
+<nav>
+<button class="active" onclick="go('home',this)">🏠 Accueil</button>
+<button onclick="go('community',this)">👥 Communauté</button>
+<button onclick="go('challenges',this)">🏆 Défis</button>
+<button onclick="go('garage',this)">🚗 Garage</button>
+<button onclick="go('wealth',this)">💰 Fortune</button>
+<button onclick="go('mysteries',this)">🔎 Mystères</button>
+<button onclick="go('spoilers',this)">🛡 Anti-spoil</button>
+</nav>
+
+<section id="home" class="page active">
+<h2>Bienvenue dans ton univers</h2>
+<p class="muted">Le compagnon indépendant des joueurs.</p>
+<div class="grid">
+<div class="card"><small>Publications</small><div class="stat" id="pc">0</div></div>
+<div class="card"><small>Défis terminés</small><div class="stat" id="dc">0</div></div>
+<div class="card"><small>Véhicules</small><div class="stat" id="cc">0</div></div>
+</div>
+<div class="card">
+<h3>🌴 Explore ton univers</h3>
+<p class="muted">Participe aux défis, présente tes collections et partage tes découvertes avec la communauté.</p>
+<button onclick="go('challenges')">Voir les défis</button>
+</div>
+</section>
+
+<section id="community" class="page">
+<h2>👥 Communauté</h2>
+<p class="muted">Partage tes idées avec les joueurs.</p>
+<div class="card">
+<textarea id="post" placeholder="Écris ta publication..."></textarea>
+<button onclick="addPost()">Publier</button>
+</div>
+<div id="posts"></div>
+</section>
+
+<section id="challenges" class="page">
+<h2>🏆 Défis</h2>
+<p class="muted">Construis ta progression personnelle.</p>
+<div id="challengeList"></div>
+</section>
+
+<section id="garage" class="page">
+<h2>🚗 Mon garage</h2>
+<div class="card">
+<input id="car" placeholder="Nom de ton véhicule">
+<button onclick="addCar()">Ajouter au garage</button>
+</div>
+<div id="cars"></div>
+</section>
+
+<section id="wealth" class="page">
+<h2>💰 Ma fortune</h2>
+<div class="card">
+<p class="muted">Fortune virtuelle déclarée</p>
+<div class="stat" id="money">0 $</div>
+<input id="amount" type="number" min="0" placeholder="Ton argent dans le jeu">
+<button onclick="saveMoney()">Enregistrer</button>
+</div>
+</section>
+
+<section id="mysteries" class="page">
+<h2>🔎 Centre des mystères</h2>
+<div class="card">
+<h3>Une découverte à partager ?</h3>
+<textarea id="mystery" placeholder="Raconte ta découverte ou ta théorie..."></textarea>
+<button onclick="addMystery()">Soumettre</button>
+</div>
+<div id="mysteryList"></div>
+</section>
+
+<section id="spoilers" class="page">
+<h2>🛡 Anti-spoil</h2>
+<div class="card">
+<h3>Protection des joueurs</h3>
+<p class="muted">Choisis de masquer les publications signalées comme spoilers.</p>
+<label><input id="shield" type="checkbox" checked style="width:auto" onchange="localStorage.setItem('shield',this.checked)"> Activer la protection</label>
+</div>
+</section>
+</main>
+<footer>
+GTA LIFE HUB © 2026<br>
+Projet communautaire indépendant. Non affilié à Rockstar Games.
+</footer>
+<script>
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let posts=get('posts',[]);
+let cars=get('cars',[]);
+let completed=get('completed',[]);
+let mysteries=get('mysteries',[]);
+let money=get('money',0);
+const challenges=[
+["Explorateur de Leonida","Découvrir cinq lieux intéressants",500],
+["Roi de la route","Créer une collection de trois véhicules",750],
+["Détective amateur","Participer à une enquête",1000],
+["Photographe","Partager une capture de ton univers",300]
+];
+function go(id,btn){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+if(btn)btn.classList.add('active');
+render();
+window.scrollTo(0,0);
+}
+function safe(s){let d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function addPost(){
+let v=document.getElementById('post').value.trim();if(!v)return;
+posts.unshift(v);set('posts',posts);document.getElementById('post').value='';render();
+}
+function addCar(){
+let v=document.getElementById('car').value.trim();if(!v)return;
+cars.push(v);set('cars',cars);document.getElementById('car').value='';render();
+}
+function removeCar(i){cars.splice(i,1);set('cars',cars);render()}
+function toggle(i,v){
+completed=v?[...completed,i]:completed.filter(x=>x!==i);
+set('completed',completed);render();
+}
+function saveMoney(){
+money=Math.max(0,Number(document.getElementById('amount').value)||0);
+set('money',money);render();
+}
+function addMystery(){
+let v=document.getElementById('mystery').value.trim();if(!v)return;
+mysteries.unshift(v);set('mysteries',mysteries);
+document.getElementById('mystery').value='';render();
+}
+function render(){
+document.getElementById('pc').textContent=posts.length;
+document.getElementById('dc').textContent=completed.length;
+document.getElementById('cc').textContent=cars.length;
+document.getElementById('posts').innerHTML=posts.map(p=>`<div class="card">${safe(p)}</div>`).join('');
+document.getElementById('cars').innerHTML=cars.map((c,i)=>`<div class="item">🚗 ${safe(c)} <button onclick="removeCar(${i})">Retirer</button></div>`).join('');
+document.getElementById('challengeList').innerHTML=challenges.map((c,i)=>`<div class="card"><h3>${safe(c[0])}</h3><p class="muted">${safe(c[1])}</p><p>⭐ ${c[2]} XP</p><label><input type="checkbox" style="width:auto" ${completed.includes(i)?'checked':''} onchange="toggle(${i},this.checked)"> Terminé</label></div>`).join('');
+document.getElementById('money').textContent=money.toLocaleString('fr-FR')+' $';
+document.getElementById('amount').value=money;
+document.getElementById('mysteryList').innerHTML=mysteries.map(m=>`<div class="card">${safe(m)}</div>`).join('');
+document.getElementById('shield').checked=get('shield',true);
+}
+render();
+</script>
+</body>
+  </html>
+  
